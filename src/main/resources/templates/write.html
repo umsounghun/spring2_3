@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!--    font-family: 'Jua', sans-serif;-->
-    <script>
+    <script th:inline="javascript">
 
         function isValidContents(contents) {
             if (contents === '') {
@@ -21,7 +21,7 @@
 
         function writePost() {
             let contents = $('#contents').val();
-            let name = $('#name').val();
+            let name = [[${username}]];
             let title = $('#title').val();
             if (isValidContents(contents) === false) {
                 return;
