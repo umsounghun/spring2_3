@@ -61,4 +61,13 @@ public class UserService {
         }
         return validatorResult;
     }
+//  유저이름 중복 작업 중
+//    @Transactional
+//            (readOnly = true) public void checkUsernameDuplication(SignupRequestDto dto) {
+//        boolean usernameDuplicate = userRepository.existsByUsername(dto.toEntity().getUsername());
+//        if (usernameDuplicate) {
+//            throw new IllegalStateException("이미 존재하는 아이디입니다.");
+//        }
+//    }
+
 }

@@ -30,15 +30,22 @@
 <div id="login-form">
   <div id="login-title">Sign up Select Shop</div>
 
-  <form action="/user/signup" method="post">
+  <form action="/user/signup" method="post"  modelAttribute="signupRequestDto">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
     <div class="login-id-label">Username</div>
     <input type="text" name="username" placeholder="Username" class="login-input-box">
+    <p><span th:style="${'color: red; font-size:11px;'}" th:text="${valid_username}"></span></p>
 
     <div class="login-id-label">Password</div>
     <input type="password" name="password" class="login-input-box">
+    <p><span th:style="${'color: red; font-size:11px;'}" th:text="${valid_password}"></span></p>
+
+<!--    <div class="login-id-label">Password</div>-->
+<!--    <input type="password" name="password2" class="login-input-box">-->
 
     <div class="login-id-label">E-mail</div>
     <input type="text" name="email" placeholder="E-mail" class="login-input-box">
+    <p><span th:style="${'color: red; font-size:11px;'}" th:text="${valid_email}"></span></p>
 
     <div>
       <input id="admin-check" type="checkbox" name="admin" onclick="onclickAdmin()" style="margin-top: 40px;">관리자

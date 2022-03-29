@@ -45,6 +45,8 @@ public class UserController {
             for (String key : validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));
             }
+//            아이디 중복 검사
+//            userService.checkUsernameDuplication(signupRequestDto);
             /* 회원가입 페이지로 다시 리턴 */
             return "signup";
         }

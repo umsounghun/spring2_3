@@ -44,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index/detail").permitAll()
                 //로그인 없이 조회
                 .antMatchers("/").permitAll()
+                .antMatchers("/detail").permitAll()
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
                 .and()

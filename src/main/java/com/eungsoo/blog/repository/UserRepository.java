@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
+//    유저 중복검사 작업 중
+//    boolean existsByUsername(String username);
 }

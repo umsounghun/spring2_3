@@ -5,15 +5,11 @@ import com.eungsoo.blog.models.Contents;
 import com.eungsoo.blog.repository.ContentsRepository;
 import com.eungsoo.blog.models.ContentsRequestDto;
 import com.eungsoo.blog.service.ContentsService;
-import com.eungsoo.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +33,7 @@ public class ContentsRestController {
     }
 
     // 게시글 생성
+    @Secured("ROLE_USER")
     @PostMapping("/api/contents")
     public Contents createContents(@RequestBody ContentsRequestDto requestDto) {
         Contents Contents = new Contents(requestDto);
@@ -44,12 +41,14 @@ public class ContentsRestController {
     }
 
     // 게시글 수정
+    @Secured("ROLE_USER")
     @PutMapping("/api/contents/{id}")
     public Long updateContents(@PathVariable Long id, @RequestBody ContentsRequestDto requestDto) {
         ContentsService.update(id, requestDto);
         return id;
     }
 
+    @Secured("ROLE_USER")
     @DeleteMapping("/api/contents/{id}")
     public Long deleteContents(@PathVariable Long id) {
         ContentsRepository.deleteById(id);
