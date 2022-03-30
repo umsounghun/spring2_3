@@ -47,6 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
                 // 저주소로 들어와도 **전체 보여주겠다
                 .antMatchers("/detail.html**").permitAll()
+                .antMatchers("/write.html").hasAnyRole("USER")
+//                .antMatchers("/user/write.html").permitAll()
+//                hasAnyRole("USER")
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
                 .and()
