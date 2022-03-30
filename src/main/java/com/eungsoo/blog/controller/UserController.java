@@ -2,13 +2,12 @@ package com.eungsoo.blog.controller;
 
 import com.eungsoo.blog.dto.SignupRequestDto;
 import com.eungsoo.blog.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
@@ -45,12 +44,15 @@ public class UserController {
             for (String key : validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));
             }
-//            아이디 중복 검사
-//            userService.checkUsernameDuplication(signupRequestDto);
-            /* 회원가입 페이지로 다시 리턴 */
             return "signup";
         }
         userService.registerUser(signupRequestDto);
         return "redirect:/user/login";
+    }
+
+    @GetMapping("/user/kakao/callback")
+    public String kakaoLogin(@RequestParam String code) throws JsonProcessingException {
+        userService.kakaoLogin(code);
+        return "redirect:/";
     }
 }

@@ -26,7 +26,7 @@ public class Contents extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    public Contents(String title, String name, String contents) {
+     public Contents(String title, String name, String contents) {
         this.title = title;
         this.name = name;
         this.contents = contents;

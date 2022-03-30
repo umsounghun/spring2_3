@@ -48,6 +48,7 @@ public class ContentsRestController {
         return id;
     }
 
+    // 게시글 삭제
     @Secured("ROLE_USER")
     @DeleteMapping("/api/contents/{id}")
     public Long deleteContents(@PathVariable Long id) {
