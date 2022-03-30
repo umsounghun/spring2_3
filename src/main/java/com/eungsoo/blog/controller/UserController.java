@@ -1,6 +1,8 @@
 package com.eungsoo.blog.controller;
 
+import com.eungsoo.blog.dto.KakaoUserInfoDto;
 import com.eungsoo.blog.dto.SignupRequestDto;
+import com.eungsoo.blog.service.KakaoUserService;
 import com.eungsoo.blog.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,12 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final KakaoUserService kakaoUserService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, KakaoUserService kakaoUserService) {
         this.userService = userService;
+        this.kakaoUserService = kakaoUserService;
     }
 
     // 회원 로그인 페이지
@@ -52,7 +56,7 @@ public class UserController {
 
     @GetMapping("/user/kakao/callback")
     public String kakaoLogin(@RequestParam String code) throws JsonProcessingException {
-        userService.kakaoLogin(code);
+        kakaoUserService.kakaoLogin(code);
         return "redirect:/";
     }
 }
