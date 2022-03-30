@@ -41,10 +41,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 // 회원 관리 처리 API 전부를 login 없이 허용
                 .antMatchers("/user/**").permitAll()
                 //로그인 없이 조회
-                .antMatchers("/index/detail").permitAll()
-                //로그인 없이 조회
+                // INDEX는 마지막에 넣어서 최종적으로 보여준다
                 .antMatchers("/").permitAll()
-                .antMatchers("/detail").permitAll()
+                //API 들어오면 다 열어주겠다 / **은 전체를 의미
+                .antMatchers("/api/**").permitAll()
+                // 저주소로 들어와도 **전체 보여주겠다
+                .antMatchers("/detail.html**").permitAll()
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
                 .and()

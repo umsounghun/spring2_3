@@ -17,4 +17,13 @@ public class HomeController {
         model.addAttribute("username", userDetails.getUsername());
         return "index";
     }
+    @GetMapping("/detail.html")
+    public String detail(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // userDetails = 유저 권한 USER 들어잇음 / 로그인 안하면 비어있으므로 NULL
+        if (userDetails == null) {
+            return "detail";
+        }
+        model.addAttribute("username", userDetails.getUsername());
+        return "detail";
+    }
 }
