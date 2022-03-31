@@ -1,13 +1,11 @@
 package com.eungsoo.blog.controller;
 
 
-import com.eungsoo.blog.models.Comments;
 import com.eungsoo.blog.models.Contents;
-import com.eungsoo.blog.repository.ContentsRepository;
 import com.eungsoo.blog.models.ContentsRequestDto;
+import com.eungsoo.blog.repository.ContentsRepository;
 import com.eungsoo.blog.service.ContentsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

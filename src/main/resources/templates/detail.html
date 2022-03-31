@@ -427,7 +427,12 @@
         <h2><span th:text="${username}"></span>님<br><br>
             맘껏 외치세요 무야호!</h2>
     </div>
-
+    <form id="my_form" method="post" action="/user/login">
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그인</a>
+    </form>
+    <form id="my_form" method="post" action="/">
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그아웃</a>
+    </form>
     <div id="cards-box" class="area-read">
         <div class="card">
             <!-- date/name 영역 -->
