@@ -26,6 +26,22 @@
             return true;
         }
 
+        function editPost(id) {
+            showEdits(id);
+            let comments = $(`#${id}-contents`).text().trim();
+            $(`#${id}-textarea`).val(comments);
+        }
+
+        function showEdits(id) {
+            $(`#${id}-editarea`).show();
+            $(`#${id}-submit`).show();
+            $(`#${id}-delete`).show();
+            $(`#${id}-done`).show();
+
+            $(`#${id}-contents`).hide();
+            $(`#${id}-edit`).hide();
+        }
+
         // 게시글을 불러옵니다.
         function getMessages() {
             $('#cards-box').empty();
@@ -75,15 +91,10 @@
         function writComment() {
             let comments = $('#comments').val();
             console.log(comments);
-            // let name = [[${username}]];
-            // console.log(name);
             if (isValidContents(comments) === false) {
                 return;
             }
-            // if (isValidContents(name) === false) {
-            //     return;
-            // }
-            console.log("hi");
+            // console.log("hi");
             let idx = location.href.split("id=")[1];
             let data = {'comments': comments, 'contentsId': idx};
             $.ajax({
@@ -114,20 +125,26 @@
                     console.log(response);
                     for (let i = 0; i < response.length; i++) {
                         let post = response[i];
-                        let id = post.id;
+                        let id = post.userId;
                         let name = post.name;
                         let comments = post.comments;
                         let modifiedAt = post.modifiedAt;
-                        addHTML_comment(id, name, comments, modifiedAt);
+                        let write = post.writeByMe;
+                        console.log(write)
+                        addHTML_comment(id, name, comments, modifiedAt, write);
                     }
                 }
             });
         }
 
         // 불러온 댓글을 html에 붙여줍니다.
-        function addHTML_comment(id, name, comments, modifiedAt) {
-            let tempaddHTML_comment = makeComment(id, name, comments, modifiedAt);
+        function addHTML_comment(id, name, comments, modifiedAt, write) {
+            let tempaddHTML_comment = makeComment_false(id, name, comments, modifiedAt);
+            if (write == true) {
+                tempaddHTML_comment = makeComment(id, name, comments, modifiedAt);
+            }
             $('#cards-box-comment').append(tempaddHTML_comment);
+            $(`#${id}-submit`).hide();
         }
 
         // 게시글 형태를 만들어줍니다.
@@ -144,7 +161,67 @@
                         <div class="contents" id="${id}-contents" >
                            ${comments}
                         </div>
+                         <div id="${id}-editarea" class="edit">
+                              <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                         </div>
+                        <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
+                        <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('${id}')">
+                        <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
                     </div>`;
+        }
+
+        // 게시글 형태를 만들어줍니다.
+        function makeComment_false(id, name, comments, modifiedAt) {
+            return `<div class="card">
+                        <div class="metadata">
+                           <div id="${id}-name" class="name">
+                               ${name}
+                           </div>
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+                        </div>
+                        <div class="contents" id="${id}-contents" >
+                           ${comments}
+                        </div>
+                         <div id="${id}-editarea" class="edit">
+                              <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                         </div>
+                    </div>`;
+        }
+
+        function submitEdit(id) {
+            // 1. 작성 대상 메모의 contents 를 확인합니다.
+            let contents = $(`#${id}-textarea`).val().trim();
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            if (isValidContents(contents) == false) {
+                return;
+            }
+            // 3. 전달할 data JSON으로 만듭니다.
+            let idx = location.href.split("id=")[1];
+            let data = {'comments': contents, 'contentsId': idx};
+            // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+            $.ajax({
+                type: "PUT",
+                url: `/api/comments/${id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지 변경에 성공하였습니다.');
+                    window.location.reload();
+                }
+            });
+        }
+
+        function deleteOne(id) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/comments/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.reload();
+                }
+            })
         }
 
     </script>
@@ -248,8 +325,6 @@
         }
 
 
-
-
         .card {
             width: 538px;
             border-radius: 5px;
@@ -310,6 +385,7 @@
             font-size: 30px;
             position: absolute;
         }
+
         textarea.field {
             width: 502px !important;
             height: 146px;
@@ -378,7 +454,7 @@
     <div class="area-write">
         <textarea class="field" placeholder="댓글을 입력해주세요" name="contents" id="comments" cols="30"
                   rows="10"></textarea>
-        <img src="/images/send.png" alt="저장하기"  onclick="writComment()">
+        <img src="/images/send.png" alt="저장하기" onclick="writComment()">
     </div>
     <div id="cards-box-comment" class="area-read">
     </div>

@@ -1,6 +1,7 @@
 package com.eungsoo.blog.controller;
 
 
+import com.eungsoo.blog.dto.CommentResponseDto;
 import com.eungsoo.blog.models.CommentRequestDto;
 import com.eungsoo.blog.models.Comments;
 import com.eungsoo.blog.models.Contents;
@@ -30,23 +31,23 @@ public class CommentsRestController {
 //        return CommentsRepository.findAllByOrderByCreatedAtDesc();
 //    }
 
-    // 댓글 특정 조회
     @GetMapping("/api/comments/{idx}")
     // Long id = 게시물의 id
-    public List<Comments> getComments(@PathVariable("idx") Long id) {
-        System.out.println(id);
-        List<Comments> comments = new ArrayList<>();
+    public List<CommentResponseDto> getComments(@PathVariable("idx") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CommentResponseDto> comments = new ArrayList<>();
         List<Comments> temp = CommentsRepository.findAll();
         for (Comments comment : temp) {
             if (comment.getContentsId().equals(id)) {
-                comments.add(comment);
+                if (userDetails.getUser().getId().equals(comment.getUserId())){
+                    CommentResponseDto commentResponseDto = new CommentResponseDto(comment.getName(), comment.getComments(), comment.getModifiedAt(), comment.getId(), true);
+                    comments.add(commentResponseDto);
+                    continue;
+                }
+                CommentResponseDto commentResponseDto = new CommentResponseDto(comment.getName(), comment.getComments(), comment.getModifiedAt(), comment.getId(), false);
+                comments.add(commentResponseDto);
             }
         }
-        System.out.println(comments.size());
         return comments;
-        // commentRepository = 댓글 저장소 / findbyid(게시물의 id와 댓글의 id가 동일한 것을 찾아줘)
-//        return CommentsRepository.findById(id).orElseThrow(
-//                ()->new IllegalArgumentException("commentsId가 존재하지 않습니다."));
     }
 
     // 게시글 생성

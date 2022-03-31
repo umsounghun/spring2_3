@@ -32,7 +32,6 @@ public class Comments extends Timestamped {
     @Column(nullable = false)
     private Long userId;
 
-
      public Comments(CommentRequestDto name, UserDetailsImpl comments) {
         this.name = comments.getUser().getUsername();
         this.comments = name.getComments();
