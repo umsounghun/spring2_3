@@ -14,12 +14,23 @@
     <script>
         $(document).ready(function () {
             getMessages();
+            getComment();
         })
+
+        // 내용 유효성 검사
+        function isValidContents(contents) {
+            if (contents === '') {
+                alert('내용을 입력해주세요');
+                return false;
+            }
+            return true;
+        }
 
         // 게시글을 불러옵니다.
         function getMessages() {
             $('#cards-box').empty();
             let idx = location.href.split("id=")[1]; //localhost/detail.html?id=12
+            console.log(idx)
             $.ajax({
                 type: "GET",
                 url: `/api/contents/${idx}`,
@@ -56,6 +67,82 @@
                     <h2 class='title' id="${id}-title">"${title}"</h2>
                         <div class="contents" id="${id}-contents" >
                            ${contents}
+                        </div>
+                    </div>`;
+        }
+
+        // 댓글 작성 post
+        function writComment() {
+            let comments = $('#comments').val();
+            console.log(comments);
+            // let name = [[${username}]];
+            // console.log(name);
+            if (isValidContents(comments) === false) {
+                return;
+            }
+            // if (isValidContents(name) === false) {
+            //     return;
+            // }
+            console.log("hi");
+            let idx = location.href.split("id=")[1];
+            let data = {'comments': comments, 'contentsId': idx};
+            $.ajax({
+                type: "POST",
+                url: "/api/comments",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('댓글을 성공적으로 작성되었습니다.');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            });
+            location.reload()
+        }
+
+        // 댓글을 불러옵니다.
+        function getComment() {
+            $('#cards-box').empty();
+            let idx = location.href.split("id=")[1]; //localhost/detail.html?id=12
+            $.ajax({
+                type: "GET",
+                url: `/api/comments/${idx}`,
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    for (let i = 0; i < response.length; i++) {
+                        let post = response[i];
+                        let id = post.id;
+                        let name = post.name;
+                        let comments = post.comments;
+                        let modifiedAt = post.modifiedAt;
+                        addHTML_comment(id, name, comments, modifiedAt);
+                    }
+                }
+            });
+        }
+
+        // 불러온 댓글을 html에 붙여줍니다.
+        function addHTML_comment(id, name, comments, modifiedAt) {
+            let tempaddHTML_comment = makeComment(id, name, comments, modifiedAt);
+            $('#cards-box-comment').append(tempaddHTML_comment);
+        }
+
+        // 게시글 형태를 만들어줍니다.
+        function makeComment(id, name, comments, modifiedAt) {
+            return `<div class="card">
+                        <div class="metadata">
+                           <div id="${id}-name" class="name">
+                               ${name}
+                           </div>
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+                        </div>
+                        <div class="contents" id="${id}-contents" >
+                           ${comments}
                         </div>
                     </div>`;
         }
@@ -146,6 +233,11 @@
             color: #ffffff;
         }
 
+        .area-write {
+            position: relative;
+            width: 538px;
+        }
+
         .area-write img {
             cursor: pointer;
             position: relative;
@@ -154,6 +246,9 @@
             bottom: 50px;
             left: 500px;
         }
+
+
+
 
         .card {
             width: 538px;
@@ -215,6 +310,29 @@
             font-size: 30px;
             position: absolute;
         }
+        textarea.field {
+            width: 502px !important;
+            height: 146px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+        }
+
+        textarea.field::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
     </style>
 
 </head>
@@ -257,6 +375,14 @@
             </div>
         </div>
     </div>
+    <div class="area-write">
+        <textarea class="field" placeholder="댓글을 입력해주세요" name="contents" id="comments" cols="30"
+                  rows="10"></textarea>
+        <img src="/images/send.png" alt="저장하기"  onclick="writComment()">
+    </div>
+    <div id="cards-box-comment" class="area-read">
+    </div>
+
 </div>
 </body>
 </html>

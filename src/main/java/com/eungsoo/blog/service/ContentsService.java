@@ -24,15 +24,4 @@ public class ContentsService {
         Contents.update(requestDto);
         return Contents.getId();
     }
-
-    //    // 글쓰기 작업
-//    public Contents createContents(ContentsRequestDto requestDto, Long userId) {
-//        // 요청받은 DTO 로 DB에 저장할 객체 만들기
-//        Contents contents = new Contents(requestDto, userId);
-//
-//        ContentsRepository.save(contents);
-//
-//        return contents;
-//    }
-
-}
+    }

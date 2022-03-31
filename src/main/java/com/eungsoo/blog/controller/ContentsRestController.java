@@ -1,6 +1,7 @@
 package com.eungsoo.blog.controller;
 
 
+import com.eungsoo.blog.models.Comments;
 import com.eungsoo.blog.models.Contents;
 import com.eungsoo.blog.repository.ContentsRepository;
 import com.eungsoo.blog.models.ContentsRequestDto;
@@ -33,7 +34,6 @@ public class ContentsRestController {
     }
 
     // 게시글 생성
-    @Secured("ROLE_USER")
     @PostMapping("/api/contents")
     public Contents createContents(@RequestBody ContentsRequestDto requestDto) {
         Contents Contents = new Contents(requestDto);
@@ -41,7 +41,6 @@ public class ContentsRestController {
     }
 
     // 게시글 수정
-    @Secured("ROLE_USER")
     @PutMapping("/api/contents/{id}")
     public Long updateContents(@PathVariable Long id, @RequestBody ContentsRequestDto requestDto) {
         ContentsService.update(id, requestDto);
@@ -49,7 +48,6 @@ public class ContentsRestController {
     }
 
     // 게시글 삭제
-    @Secured("ROLE_USER")
     @DeleteMapping("/api/contents/{id}")
     public Long deleteContents(@PathVariable Long id) {
         ContentsRepository.deleteById(id);
